@@ -1,0 +1,86 @@
+local normalRange = 0 -- to change the football size
+
+local function resizePart(part)
+    if part:IsA("BasePart") and (part.Name == "Football" or part.Name == "FootballBasePart") then
+        part.Size = Vector3.new(normalRange, normalRange, normalRange)
+        part.Anchored = true
+    end
+end
+
+Workspace.ChildAdded:Connect(function(child)
+    resizePart(child)
+end)
+
+for _, child in pairs(Workspace:GetChildren()) do
+    resizePart(child)
+end
+
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/rainhitgrassed/UI-Library-/main/sigma')))()
+local Window = OrionLib:MakeWindow({Name = "Sigma hub", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+local tab1 = Window:MakeTab({
+	Name = "Catching",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local tab2 = Window:MakeTab({
+	Name = "Player",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local sec1 = tab1:AddSection({
+	Name = "Customize Magnets"
+})
+
+tab1:AddToggle({
+	Name = "Magnets",
+	Default = false,
+	Callback = function(Value)
+        normalRange = Value
+	end    
+})
+
+tab1:AddSlider({
+	Name = "Magnet Radius",
+	Min = 0,
+	Max = 25,
+	Default = 0,
+	Color = Color3.fromRGB(183, 1, 1),
+	Increment = 1,
+	ValueName = "Magnet Radius",
+	Callback = function(Value)
+        normalRange = Value
+	end    
+})
+
+local sec2 = tab2:AddSection({
+	Name = "Customize WalkSpeed & JumpPower"
+})
+
+tab2:AddSlider({
+	Name = "Custom WalkSpeed",
+	Min = 20,
+	Max = 23,
+	Default = 20,
+	Color = Color3.fromRGB(183, 1, 1),
+	Increment = 1,
+	ValueName = "WalkSpeed",
+	Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+	end    
+})
+
+tab2:AddSlider({
+	Name = "Custom JumpPower",
+	Min = 50,
+	Max = 55,
+	Default = 50,
+	Color = Color3.fromRGB(183, 1, 1),
+	Increment = 1,
+	ValueName = "JumpPower",
+	Callback = function(Value)
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+	end    
+})
