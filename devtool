@@ -1,0 +1,79 @@
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Loco-CTO/UI-Library/main/VisionLibV2/source.lua'))()
+
+Window = Library:Create({
+	Name = "JustVPN, Dev Tools",
+	Footer = "By Loco_CTO, Sius and BruhOOFBoi",
+	ToggleKey = Enum.KeyCode.RightShift,
+	LoadedCallback = function()
+		Window:TaskBarOnly(true)
+	end,
+	KeySystem = false,
+	Key = "123456",
+	MaxAttempts = 5,
+	DiscordLink = nil,
+	ToggledRelativeYOffset = 0
+})
+
+Window:ChangeTogglekey(Enum.KeyCode.RightShift)
+
+local tab1 = Window:Tab({
+	Name = "Tools",
+	Icon = "rbxassetid://11396131982",
+	Color = Color3.new(1, 0, 0)
+})
+
+local sec1 = tab1:Section({
+	Name = "All Tools"
+})
+
+local Button = sec1:Button({
+	Name = "Infinite Yield",
+	Callback = function()
+		loadstring(game:HttpGet('https://raw.githubusercontent.com/DarkNetworks/Infinite-Yield/main/latest.lua'))()
+	end
+})
+
+local Button = sec1:Button({
+	Name = "Game Info",
+	Callback = function()
+			-- Create a function to print game details
+	local function printGameDetails()
+		-- Get the game name and game ID
+		local gameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+		local gameId = game.PlaceId
+
+		-- Print game details to the output
+		print("Game Name: " .. gameName)
+		print("Game ID: " .. tostring(gameId))
+	end
+
+	-- Call the function
+	printGameDetails()
+
+	end
+})
+
+local Button = sec1:Button({
+	Name = "Humanoid Info",
+	Callback = function()
+			-- Get the LocalPlayer
+	local player = game.Players.LocalPlayer
+
+	-- Ensure the player exists and has a character
+	if player and player.Character then
+		local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+		
+		-- Check if the Humanoid exists
+		if humanoid then
+			-- Print WalkSpeed and JumpPower
+			print("WalkSpeed: " .. humanoid.WalkSpeed)
+			print("JumpPower: " .. humanoid.JumpPower)
+		else
+			print("Humanoid not found in the player's character.")
+		end
+	else
+		print("LocalPlayer or character not found.")
+	end
+
+	end
+})
