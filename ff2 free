@@ -1,86 +1,324 @@
-local normalRange = 0 -- to change the football size
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Loco-CTO/UI-Library/main/VisionLibV2/source.lua'))()
 
+Window = Library:Create({
+	Name = "JustVPN Hub, Football Noobs",
+	Footer = "By Loco_CTO, Sius and BruhOOFBoi",
+	ToggleKey = Enum.KeyCode.RightShift,
+	LoadedCallback = function()
+		Window:TaskBarOnly(true)
+	end,
+	KeySystem = false,
+	Key = "123456",
+	MaxAttempts = 5,
+	DiscordLink = nil,
+	ToggledRelativeYOffset = 0
+})
+
+Window:ChangeTogglekey(Enum.KeyCode.RightShift)
+
+local tab1 = Window:Tab({
+	Name = "Main",
+	Icon = "rbxassetid://11396131982",
+	Color = Color3.new(1, 0, 0)
+})
+
+local sec1 = tab1:Section({
+	Name = "Customize Magnets"
+})
+
+-- Variables for the toggle and slider
+local hitboxSize = 0 -- Default hitbox size
+local isMagnetsEnabled = false -- Default state for toggle
+
+-- Function to resize parts
 local function resizePart(part)
     if part:IsA("BasePart") and (part.Name == "Football" or part.Name == "FootballBasePart") then
-        part.Size = Vector3.new(normalRange, normalRange, normalRange)
-        part.Anchored = true
+        -- Only resize if magnets are enabled
+        if isMagnetsEnabled then
+            part.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+        end
     end
 end
 
+-- Monitor for new parts being added
 Workspace.ChildAdded:Connect(function(child)
     resizePart(child)
 end)
 
+-- Apply to already existing parts
 for _, child in pairs(Workspace:GetChildren()) do
     resizePart(child)
 end
 
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/rainhitgrassed/UI-Library-/main/sigma')))()
-local Window = OrionLib:MakeWindow({Name = "Sigma hub", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
-
-local tab1 = Window:MakeTab({
-	Name = "Catching",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
+-- UI Toggle and Slider
+local Toggle = sec1:Toggle({
+    Name = "Enable Magnets",
+    Default = false,
+    Callback = function(Bool)
+        isMagnetsEnabled = Bool
+        -- When enabling magnets, resize all parts immediately
+        if isMagnetsEnabled then
+            for _, child in pairs(Workspace:GetChildren()) do
+                resizePart(child)
+            end
+        end
+    end
 })
 
-local tab2 = Window:MakeTab({
-	Name = "Player",
-	Icon = "rbxassetid://4483345998",
-	PremiumOnly = false
+local Slider = sec1:Slider({
+    Name = "Magnet Radius",
+    Max = 25,
+    Min = 0,
+    Default = 0, -- Set the default value to 25
+    Callback = function(Number)
+        hitboxSize = Number
+        -- If magnets are enabled, apply size change immediately
+        if isMagnetsEnabled then
+            for _, child in pairs(Workspace:GetChildren()) do
+                resizePart(child)
+            end
+        end
+    end
 })
 
-local sec1 = tab1:AddSection({
-	Name = "Customize Magnets"
+
+local sec2 = tab1:Section({
+	Name = "Customize Player Settings"
 })
 
-tab1:AddToggle({
-	Name = "Magnets",
-	Default = false,
-	Callback = function(Value)
-        normalRange = Value
-	end    
-})
+-- Script to adjust WalkSpeed and JumpPower based on slider values
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local Humanoid = Character:WaitForChild("Humanoid")
 
-tab1:AddSlider({
-	Name = "Magnet Radius",
-	Min = 0,
-	Max = 25,
-	Default = 0,
-	Color = Color3.fromRGB(183, 1, 1),
-	Increment = 1,
-	ValueName = "Magnet Radius",
-	Callback = function(Value)
-        normalRange = Value
-	end    
-})
+-- Default values for WalkSpeed and JumpPower
+local walkSpeedValue = 20
+local jumpPowerValue = 50
 
-local sec2 = tab2:AddSection({
-	Name = "Customize WalkSpeed & JumpPower"
-})
-
-tab2:AddSlider({
-	Name = "Custom WalkSpeed",
+-- Slider for WalkSpeed
+local SliderWS = sec2:Slider({
+	Name = "Adjust WS",
+	Max = 45,
 	Min = 20,
-	Max = 23,
 	Default = 20,
-	Color = Color3.fromRGB(183, 1, 1),
-	Increment = 1,
-	ValueName = "WalkSpeed",
-	Callback = function(Value)
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-	end    
+	Callback = function(Number)
+		walkSpeedValue = Number
+		Humanoid.WalkSpeed = walkSpeedValue
+	end
 })
 
-tab2:AddSlider({
-	Name = "Custom JumpPower",
+-- Slider for JumpPower
+local SliderJP = sec2:Slider({
+	Name = "Adjust JP",
+	Max = 70,
 	Min = 50,
-	Max = 55,
 	Default = 50,
-	Color = Color3.fromRGB(183, 1, 1),
-	Increment = 1,
-	ValueName = "JumpPower",
-	Callback = function(Value)
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
-	end    
+	Callback = function(Number)
+		jumpPowerValue = Number
+		Humanoid.JumpPower = jumpPowerValue
+	end
 })
+
+-- Function to update WalkSpeed and JumpPower
+local function updateHumanoidStats()
+	Humanoid.WalkSpeed = walkSpeedValue
+	Humanoid.JumpPower = jumpPowerValue
+end
+
+-- Call updateHumanoidStats when the player's character respawns
+LocalPlayer.CharacterAdded:Connect(function(character)
+	Character = character
+	Humanoid = Character:WaitForChild("Humanoid")
+	updateHumanoidStats()
+end)
+
+-- Initial setup
+updateHumanoidStats()
+
+-- In case the Humanoid is reset during gameplay
+Humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+	if Humanoid.WalkSpeed ~= walkSpeedValue then
+		Humanoid.WalkSpeed = walkSpeedValue
+	end
+end)
+
+Humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
+	if Humanoid.JumpPower ~= jumpPowerValue then
+		Humanoid.JumpPower = jumpPowerValue
+	end
+end)
+
+
+-- LocalScript placed in StarterPlayerScripts
+
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local originalJumpPower = humanoid.JumpPower
+local temporaryJumpPower = 55
+local resetDelay = 0.1 -- Time in seconds before resetting the jump power
+
+-- Function to handle the key press
+local function onKeyPress(input, gameProcessedEvent)
+    if gameProcessedEvent then return end
+    
+    if input.KeyCode == Enum.KeyCode.Space and UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+        humanoid.JumpPower = temporaryJumpPower
+        wait(resetDelay)
+        humanoid.JumpPower = originalJumpPower
+    end
+end
+
+-- Connect the input action to the function
+UserInputService.InputBegan:Connect(onKeyPress)
+
+-- Function to handle character respawn, ensuring that temporaryJumpPower remains consistent
+local function onCharacterRespawned()
+    character = player.Character or player.CharacterAdded:Wait()
+    humanoid = character:WaitForChild("Humanoid")
+end
+
+player.CharacterAdded:Connect(onCharacterRespawned)
+
+-- Slider integration for adjusting jump power dynamically
+local Slider = sec2:Slider({
+    Name = "Adjust Angle",
+    Max = 80,
+    Min = 55,
+    Default = 55,
+    Callback = function(Number)
+        temporaryJumpPower = Number -- Update the jump power based on slider value
+    end
+})
+
+
+local sec3 = tab1:Section({
+	Name = "Physics Settings"
+})
+
+-- Place this script in StarterPlayerScripts or StarterCharacterScripts
+
+-- Reference to the LocalPlayer
+local player = game.Players.LocalPlayer
+local userInputService = game:GetService("UserInputService")
+local range = 0
+
+-- Function to teleport the player
+local function teleportPlayer()
+    local character = player.Character
+    if not character then return end
+
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    if not humanoidRootPart then return end
+
+    -- Get the player's current position and direction
+    local currentPosition = humanoidRootPart.Position
+    local lookDirection = humanoidRootPart.CFrame.LookVector
+
+    -- Calculate the new position
+    local newPosition = currentPosition + (lookDirection * range)
+
+    -- Teleport the player
+    humanoidRootPart.CFrame = CFrame.new(newPosition, newPosition + lookDirection)
+end
+
+-- Connect the function to the key press event
+userInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.F then
+        teleportPlayer()
+    end
+end)
+
+
+local Slider = sec3:Slider({
+	Name = "Adjust TP Range",
+	Max = 10,
+	Min = 0,
+	Default = 0,
+	Callback = function(Number)
+		range = Number
+	end
+})
+
+local grav = 28
+local beamVisible = false -- Default visibility
+
+-- Function to calculate the ball's position at a given time
+local function BallPosAtTime(initial_position, initial_velocity, gravity, t)
+    local predicted_position = initial_position + initial_velocity * t + 0.5 * Vector3.new(0, -gravity, 0) * t ^ 2
+    return predicted_position
+end
+
+-- Function to create parts and beam
+local function createPartsAndBeam(x0, v0, airtime)
+    local parts = {}
+    local attachments = {}
+    local lastAttachment = nil
+
+    for t = 0, airtime, 0.05 do
+        local POS = BallPosAtTime(x0, v0, grav, t)
+        local Part = Instance.new("Part")
+        Part.Parent = workspace
+        Part.Size = Vector3.new(3, 2, 3)
+        Part.Anchored = true
+        Part.Color = Color3.fromRGB(0, 147, 70) -- Green color
+        Part.CanCollide = false
+        Part.Position = POS
+        Part.Rotation = Vector3.new(-90, 0, 90)
+        Part.Transparency = 1 -- Make the part completely invisible
+        table.insert(parts, Part)
+
+        local attachment = Instance.new("Attachment", Part)
+        table.insert(attachments, attachment)
+
+        if lastAttachment then
+            local beam = Instance.new("Beam")
+            beam.Parent = Part
+            beam.Color = ColorSequence.new(Color3.fromRGB(34, 204, 70)) -- Green color
+            beam.Texture = "rbxassetid://18231379988"
+            beam.Attachment0 = lastAttachment
+            beam.Attachment1 = attachment
+            beam.Width0 = 1.5
+            beam.Width1 = 1.5
+            -- Gradually change beam transparency from 1 to 0
+            beam.Transparency = NumberSequence.new(0.7 - (t / airtime))
+            
+            -- Set the initial visibility based on toggle
+            beam.Enabled = beamVisible
+        end
+
+        lastAttachment = attachment
+    end
+    return parts
+end
+
+-- Toggle functionality
+local Toggle = sec3:Toggle({
+    Name = "Draw Football Prediction",
+    Default = false,
+    Callback = function(Bool)
+        beamVisible = Bool
+    end
+})
+
+workspace.ChildAdded:Connect(function(c)
+    game:GetService("RunService").Stepped:Wait()
+    if c.Name ~= "Football" or c:IsA("Tool") then return end
+
+    local x0 = c.Position
+    local v0 = c.Velocity
+
+    local airtime = (-v0.Y - math.sqrt(v0.Y ^ 2 - 4 * 0.5 * -grav * x0.Y)) / (2 * 0.5 * -grav)
+
+    local parts = createPartsAndBeam(x0, v0, airtime)
+
+    task.wait(airtime + 1.75)
+
+    for _, Part in ipairs(parts) do
+        Part:Destroy()
+    end
+end)
