@@ -1,0 +1,161 @@
+-- // GUI TO LUA \\ --
+
+-- // INSTANCES: 11 | SCRIPTS: 1 | MODULES: 0 \\ --
+
+local UI = {}
+
+-- // StarterGui.UI \\ --
+UI["1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
+UI["1"]["Name"] = [[UI]]
+UI["1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling
+
+-- // StarterGui.UI.Loader \\ --
+UI["2"] = Instance.new("Frame", UI["1"])
+UI["2"]["Visible"] = false
+UI["2"]["BorderSizePixel"] = 0
+UI["2"]["BackgroundColor3"] = Color3.fromRGB(154, 154, 154)
+UI["2"]["Size"] = UDim2.new(0, 380, 0, 139)
+UI["2"]["Position"] = UDim2.new(0.32943, 0, 0.314, 0)
+UI["2"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+UI["2"]["Name"] = [[Loader]]
+
+-- // StarterGui.UI.Loader.UICorner \\ --
+UI["3"] = Instance.new("UICorner", UI["2"])
+UI["3"]["CornerRadius"] = UDim.new(0, 9)
+
+-- // StarterGui.UI.Loader.UIGradient \\ --
+UI["4"] = Instance.new("UIGradient", UI["2"])
+UI["4"]["Rotation"] = 90
+UI["4"]["Color"] = ColorSequence.new{ColorSequenceKeypoint.new(0.000, Color3.fromRGB(67, 29, 82)),ColorSequenceKeypoint.new(1.000, Color3.fromRGB(0, 0, 0))}
+
+-- // StarterGui.UI.Loader.Title \\ --
+UI["5"] = Instance.new("TextLabel", UI["2"])
+UI["5"]["BorderSizePixel"] = 0
+UI["5"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+UI["5"]["TextSize"] = 35
+UI["5"]["FontFace"] = Font.new([[rbxasset://fonts/families/SourceSansPro.json]], Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+UI["5"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+UI["5"]["BackgroundTransparency"] = 1
+UI["5"]["Size"] = UDim2.new(0, 200, 0, 50)
+UI["5"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+UI["5"]["Text"] = [[Lightning.cc]]
+UI["5"]["Name"] = [[Title]]
+UI["5"]["Position"] = UDim2.new(0.23684, 0, 0.31417, 0)
+
+-- // StarterGui.UI.Loader.Title.UIGradient \\ --
+UI["6"] = Instance.new("UIGradient", UI["5"])
+UI["6"]["Rotation"] = 90
+UI["6"]["Color"] = ColorSequence.new{ColorSequenceKeypoint.new(0.000, Color3.fromRGB(255, 255, 255)),ColorSequenceKeypoint.new(1.000, Color3.fromRGB(45, 50, 91))}
+
+-- // StarterGui.UI.Loader.LoaderShadow \\ --
+UI["7"] = Instance.new("Frame", UI["2"])
+UI["7"]["ZIndex"] = 0
+UI["7"]["Size"] = UDim2.new(1, 0, 1, 0)
+UI["7"]["Name"] = [[LoaderShadow]]
+UI["7"]["BackgroundTransparency"] = 1
+
+-- // StarterGui.UI.Loader.LoaderShadow.umbraShadow \\ --
+UI["8"] = Instance.new("ImageLabel", UI["7"])
+UI["8"]["ZIndex"] = 0
+UI["8"]["SliceCenter"] = Rect.new(10, 10, 118, 118)
+UI["8"]["ScaleType"] = Enum.ScaleType.Slice
+UI["8"]["ImageTransparency"] = 0.86
+UI["8"]["ImageColor3"] = Color3.fromRGB(0, 0, 0)
+UI["8"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+UI["8"]["Image"] = [[rbxassetid://1316045217]]
+UI["8"]["Size"] = UDim2.new(1, 10, 1, 10)
+UI["8"]["BackgroundTransparency"] = 1
+UI["8"]["Name"] = [[umbraShadow]]
+UI["8"]["Position"] = UDim2.new(0.5, 0, 0.5, 6)
+
+-- // StarterGui.UI.Loader.LoaderShadow.penumbraShadow \\ --
+UI["9"] = Instance.new("ImageLabel", UI["7"])
+UI["9"]["ZIndex"] = 0
+UI["9"]["SliceCenter"] = Rect.new(10, 10, 118, 118)
+UI["9"]["ScaleType"] = Enum.ScaleType.Slice
+UI["9"]["ImageTransparency"] = 0.88
+UI["9"]["ImageColor3"] = Color3.fromRGB(0, 0, 0)
+UI["9"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+UI["9"]["Image"] = [[rbxassetid://1316045217]]
+UI["9"]["Size"] = UDim2.new(1, 10, 1, 10)
+UI["9"]["BackgroundTransparency"] = 1
+UI["9"]["Name"] = [[penumbraShadow]]
+UI["9"]["Position"] = UDim2.new(0.5, 0, 0.5, 6)
+
+-- // StarterGui.UI.Loader.LoaderShadow.ambientShadow \\ --
+UI["a"] = Instance.new("ImageLabel", UI["7"])
+UI["a"]["ZIndex"] = 0
+UI["a"]["SliceCenter"] = Rect.new(10, 10, 118, 118)
+UI["a"]["ScaleType"] = Enum.ScaleType.Slice
+UI["a"]["ImageTransparency"] = 0.88
+UI["a"]["ImageColor3"] = Color3.fromRGB(0, 0, 0)
+UI["a"]["AnchorPoint"] = Vector2.new(0.5, 0.5)
+UI["a"]["Image"] = [[rbxassetid://1316045217]]
+UI["a"]["Size"] = UDim2.new(1, 10, 1, 10)
+UI["a"]["BackgroundTransparency"] = 1
+UI["a"]["Name"] = [[ambientShadow]]
+UI["a"]["Position"] = UDim2.new(0.5, 0, 0.5, 6)
+
+-- // StarterGui.UI.Load \\ --
+UI["b"] = Instance.new("LocalScript", UI["1"])
+UI["b"]["Name"] = [[Load]]
+
+-- // StarterGui.UI.Load \\ --
+local function SCRIPT_b()
+local script = UI["b"]
+	-- Variables
+	local TweenService = game:GetService("TweenService")
+	
+	-- Define the LoaderFrame and TextLabel
+	local loaderFrame = script.Parent:WaitForChild("Loader")
+	local textLabel = loaderFrame:WaitForChild("Title")
+	
+	-- Tween Info
+	local tweenInfo = TweenInfo.new(
+		3, -- Time (in seconds)
+		Enum.EasingStyle.Quad, -- Easing Style
+		Enum.EasingDirection.Out, -- Easing Direction
+		0, -- Repeat Count
+		false, -- Reverses
+		0 -- Delay Time
+	)
+	
+	-- Function to create transparency tween
+	local function tweenTransparency(instance, transparency)
+		local tween = TweenService:Create(instance, tweenInfo, {BackgroundTransparency = transparency})
+		tween:Play()
+		return tween
+	end
+	
+	-- TextLabel transparency tween (TextTransparency is for TextLabel)
+	local function tweenTextLabelTransparency(instance, transparency)
+		local tween = TweenService:Create(instance, tweenInfo, {TextTransparency = transparency})
+		tween:Play()
+		return tween
+	end
+	
+	-- Step 1: Tween transparency to 0 and set visible
+	local tween1 = tweenTransparency(loaderFrame, 0)
+	local tween2 = tweenTextLabelTransparency(textLabel, 0)
+	
+	tween1.Completed:Connect(function()
+		loaderFrame.Visible = true
+		textLabel.Visible = true
+	
+		-- Step 2: Wait for 2 seconds
+		wait(3)
+	
+		-- Step 3: Tween transparency to 1 and set visibility to false when done
+		local tween3 = tweenTransparency(loaderFrame, 1)
+		local tween4 = tweenTextLabelTransparency(textLabel, 1)
+	
+		tween3.Completed:Connect(function()
+			loaderFrame.Visible = false
+			textLabel.Visible = false
+		end)
+	end)
+	
+end
+task.spawn(SCRIPT_b)
+
+return UI["1"], require;
